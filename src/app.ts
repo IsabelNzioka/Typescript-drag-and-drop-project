@@ -55,11 +55,45 @@ class ProjectTemplate {
     this.attach(); //call the private method so that its code also executes
   }
 
+  private gatherUserInput(): [string, string, number] | void {
+    // we might return nothing or a Tuple
+    //void - this is a function which has atleast a branch which does not return any value.
+    const enteredTitle = this.titleInputElement.value;
+    const enteredDescriptor = this.descriptionInputElement.value;
+    const enteredPeople = this.peopleInputElement.value;
+
+    if (
+      enteredTitle.trim().length === 0 ||
+      enteredDescriptor.trim().length === 0 ||
+      enteredPeople.trim().length === 0
+    ) {
+      alert("Invalid input, please try again");
+      return;
+    } else {
+      return [enteredTitle, enteredDescriptor, +enteredPeople];
+    }
+  }
+
+  private clearInputs() {
+    this.titleInputElement.value = "";
+    this.descriptionInputElement.value = "";
+    this.peopleInputElement.value = "";
+  }
+
   // Add a listener to our form
   @autobind
   private submitHandler(event: Event) {
     event.preventDefault();
-    console.log(this.titleInputElement.value);
+
+    const userInput = this.gatherUserInput(); //tuple or nothing undefined
+    if (Array.isArray(userInput)) {
+      //tuple is an array in js
+      const [title, desc, people] = userInput; //array destructuring
+      console.log(title, desc, people);
+
+      // clear inputs after submit
+      this.clearInputs();
+    }
   }
 
   private configure() {
